@@ -45,6 +45,7 @@ actual_labels = encoders["Play"].inverse_transform(y_test)
 
 # Show predictions
 # Print each prediction and compare it with the actual answer.
+# The function zip() is used to pair elements from two (or more) iterables together.
 print("\nPredicted vs Actual:")
 for pred, actual in zip(predicted_labels, actual_labels):
     print(f"Predicted: {pred}   Actual: {actual}")
