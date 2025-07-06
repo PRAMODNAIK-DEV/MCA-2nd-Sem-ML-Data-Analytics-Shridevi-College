@@ -1,48 +1,33 @@
-# Install the dependencies
-# pip install pandas matplotlib scikit-learn
-
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 
-# Load CSV data
-file_path = "dataset.csv" 
-data = pd.read_csv(file_path)
+# Step 1: Load CSV data
+data = pd.read_csv("dataset.csv")
 
+# Step 2: Convert to numerical array
+X = data.values  # or data[['Height', 'Weight']].values if more columns
 
-# Drop non-numeric columns if any (optional, based on CSV structure)
-# numeric_data = data.select_dtypes(include=["float64", "int64"])
-
-# Ask user for number of clusters
-k = int(input("Enter the number of clusters (k): "))
-
-# Create KMeans model
+# Step 3: Apply K-Means clustering
+k = int(input("Enter the number of Clusters (k): "))  # You can change number of clusters
 kmeans = KMeans(n_clusters=k, random_state=0)
+kmeans.fit(X)
 
-# Fit the model to the data
-kmeans.fit(data)
+# Step 4: Get cluster labels
+labels = kmeans.labels_
+print("\nCluster Labels:", labels)
 
-# Add cluster labels to the data
-data['Cluster'] = kmeans.labels_
+# Step 5: Add labels to data and show result
+data['Cluster'] = labels
+print("\nClustered Data:\n", data)
 
-# Print cluster centers
-print("\nCluster Centers:")
-print(kmeans.cluster_centers_)
-
-# Print data with cluster labels
-print("\nData with Cluster Labels:")
-print(data)
-
-# Plotting (only if 2 features)
-if numeric_data.shape[1] == 2:
-    plt.scatter(numeric_data.iloc[:, 0], numeric_data.iloc[:, 1], c=kmeans.labels_, cmap='viridis')
-    plt.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1], color='red', marker='X', label='Centroids')
-    plt.xlabel(data.columns[0])
-    plt.ylabel(data.columns[1])
-    plt.title('K-Means Clustering')
-    plt.legend()
-    plt.grid(True)
-    plt.show()
-else:
-    print("\nPlotting is only supported for 2D data.")
-
+# Step 6: Plot the clusters
+plt.scatter(X[:, 0], X[:, 1], c=labels, cmap='viridis', marker='o')
+plt.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1], 
+            s=200, c='red', label='Centroids', marker='X')
+plt.title('K-Means Clustering')
+plt.xlabel('Height')
+plt.ylabel('Weight')
+plt.legend()
+plt.grid(True)
+plt.show()
